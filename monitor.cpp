@@ -3,24 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
-#include <string>
 
-std::string CheckVitals::checkVitals(double temperature, double pulseRate, double spo2) {
-    // Array of checks
-    VitalCheck checks[] = {
-        {temperature >= 102 || temperature < 95, "Temperature is critical!"},
-        {pulseRate < 60 || pulseRate >= 100, "Pulse Rate is out of range!"},
-        {spo2 < 90, "Oxygen Saturation out of range!"}
-    };
-
-    // Loop through checks
-    for (const auto& check : checks) {
-        if (check.condition) {
-            return check.message;
-        }
-    }
-    return "";
-}
 void CheckVitals::displayWarning(const std::string& message) {
     std::cout << message << "\n";
     for (int i = 0; i < 6; i++) {
@@ -31,12 +14,44 @@ void CheckVitals::displayWarning(const std::string& message) {
     }
 }
 
+// Helper functions to check each vital
+bool CheckVitals::isTemperatureCritical(double temperature) {
+    return temperature > 102 || temperature < 95;
+}
+
+bool CheckVitals::isPulseRateOutOfRange(double pulseRate) {
+    return pulseRate < 60 || pulseRate > 100;
+}
+
+bool CheckVitals::isSpo2OutOfRange(double spo2) {
+    return spo2 < 90;
+}
+
+// Function to check if vitals are ok
 int CheckVitals::vitalsOk(double temperature, double pulseRate, double spo2) {
-    std::string warningMessage = checkVitals(temperature, pulseRate, spo2);
-    if (!warningMessage.empty()) {
-        displayWarning(warningMessage);
-        return 0;
+    // Store condition functions and messages in pairs
+    struct Check {
+        bool (*func)(double);
+        const char* message;
+    };
+
+    Check checks[] = {
+        { isTemperatureCritical, "Temperature is critical!" },
+        { isPulseRateOutOfRange, "Pulse Rate is out of range!" },
+        { isSpo2OutOfRange, "Oxygen Saturation out of range!" }
+    };
+
+    // Corresponding values for each check
+    double values[] = { temperature, pulseRate, spo2 };
+
+    // Iterate through each check
+    for (int i = 0; i < 3; ++i) {
+        if (checks[i].func(values[i])) {
+            displayWarning(checks[i].message);
+            return 0;  // Return 0 if any condition is met
+        }
     }
-    return 1;
+
+    return 1;  // Return 1 if all vitals are normal
 }
 

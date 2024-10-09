@@ -2,12 +2,11 @@
 #include <iostream>
 
 class CheckVitals{
-    struct VitalCheck {
-        bool condition;
-        const char* message;
-    };
+
 public:
-    std::string checkVitals(double temperature, double pulseRate, double spo2);
+    bool isTemperatureCritical(double temperature);
+    bool isPulseRateOutOfRange(double pulseRate);
+    bool isSpo2OutOfRange(double spo2);
     void displayWarning(const std::string& message);
     int vitalsOk(double temperature, double pulseRate, double spo2);
 };
