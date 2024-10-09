@@ -49,9 +49,9 @@ int CheckVitals::vitalsOk(double temperature, double pulseRate, double spo2) {
     for (int i = 0; i < 3; ++i) {
         if (checks[i].checkFunc(checks[i].value)) {
             displayWarning(checks[i].message);
-            return 0; // Return 0 if any condition fails
+            return 0;  // Return 0 if any condition fails
         }
     }
 
-    return 1; // Return 1 if all vitals are normal
+    return 1;  // Return 1 if all vitals are normal
 }
