@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string>
 
-class CheckVitals{
-public:
+class CheckVitals {
+ public:
     bool isTemperatureCritical(double temperature);
     bool isPulseRateOutOfRange(double pulseRate);
     bool isSpo2OutOfRange(double spo2);

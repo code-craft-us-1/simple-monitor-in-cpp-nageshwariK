@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <string>
 
 void CheckVitals::displayWarning(const std::string& message) {
     std::cout << message << "\n";
