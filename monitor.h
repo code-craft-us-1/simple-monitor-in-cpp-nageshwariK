@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 class CheckVitals{
-
 public:
     bool isTemperatureCritical(double temperature);
     bool isPulseRateOutOfRange(double pulseRate);

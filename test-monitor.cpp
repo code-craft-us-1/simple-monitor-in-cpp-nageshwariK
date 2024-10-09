@@ -8,7 +8,7 @@ TEST(Monitor, OkWhenAllVitalInRange) {
     ASSERT_TRUE(vitals.vitalsOk(98.1, 70, 98));
 }
 
-TEST(Monitor, NotOkWhenAnyVitalIsOffRange){
+TEST(Monitor, NotOkWhenAnyVitalIsOffRange) {
     CheckVitals vitals;
 
     ASSERT_FALSE(vitals.vitalsOk(99, 102, 70));
