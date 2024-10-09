@@ -5,18 +5,21 @@
 #include <iostream>
 
 std::string CheckVitals::checkVitals(double temperature, double pulseRate, double spo2) {
-    if (temperature > 102 || temperature < 95) {
-        return "Temperature is critical!";
-    }
-    if (pulseRate < 60 || pulseRate > 100) {
-        return "Pulse Rate is out of range!";
-    }
-    if (spo2 < 90) {
-        return "Oxygen Saturation out of range!";
+    // Array of checks
+    VitalCheck checks[] = {
+        {temperature >= 102 || temperature < 95, "Temperature is critical!"},
+        {pulseRate < 60 || pulseRate >= 100, "Pulse Rate is out of range!"},
+        {spo2 < 90, "Oxygen Saturation out of range!"}
+    };
+
+    // Loop through checks
+    for (const auto& check : checks) {
+        if (check.condition) {
+            return check.message;
+        }
     }
     return ""; // No issues
 }
-
 void CheckVitals::displayWarning(const std::string& message) {
     std::cout << message << "\n";
     for (int i = 0; i < 6; i++) {
