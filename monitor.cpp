@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <string>
 
 std::string CheckVitals::checkVitals(double temperature, double pulseRate, double spo2) {
     // Array of checks
@@ -18,7 +19,7 @@ std::string CheckVitals::checkVitals(double temperature, double pulseRate, doubl
             return check.message;
         }
     }
-    return ""; // No issues
+    return "";
 }
 void CheckVitals::displayWarning(const std::string& message) {
     std::cout << message << "\n";
