@@ -32,17 +32,26 @@ bool isSpo2OutOfRange(double spo2) {
 bool CheckVitals::checkVital(double value, bool (*checkFunc)(double), const std::string& message) {
     if (checkFunc(value)) {
         displayWarning(message);
-        return false; // Indicates a vital is not okay
+        return false;  // Indicates a vital is not okay
     }
-    return true; // Indicates the vital is okay
+    return true;  // Indicates the vital is okay
 }
 
 // Function to check if vitals are ok
 int CheckVitals::vitalsOk(double temperature, double pulseRate, double spo2) {
-    bool tempCheck = checkVital(temperature, isTemperatureCritical, "Temperature is critical!");
-    bool pulseCheck = checkVital(pulseRate, isPulseRateOutOfRange, "Pulse Rate is out of range!");
-    bool spo2Check = checkVital(spo2, isSpo2OutOfRange, "Oxygen Saturation out of range!");
+    VitalCheck checks[] = {
+         {temperature, isTemperatureCritical, "Temperature is critical!"},
+         {pulseRate, isPulseRateOutOfRange, "Pulse Rate is out of range!"},
+         {spo2, isSpo2OutOfRange, "Oxygen Saturation out of range!"}
+    };
 
-    // If all checks passed
-    return (tempCheck && pulseCheck && spo2Check) ? 1 : 0;
+    // Iterate through each vital check
+    for (int i = 0; i < 3; ++i) {
+        if (checks[i].checkFunc(checks[i].value)) {
+            displayWarning(checks[i].message);
+            return 0; // Return 0 if any condition fails
+        }
+    }
+
+    return 1; // Return 1 if all vitals are normal
 }
