@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <vector>
 
 void CheckVitals::displayWarning(const std::string& message) {
     std::cout << message << "\n";
@@ -16,43 +17,32 @@ void CheckVitals::displayWarning(const std::string& message) {
 }
 
 // Helper functions to check each vital
-bool CheckVitals::isTemperatureCritical(double temperature) {
+bool isTemperatureCritical(double temperature) {
     return temperature > 102 || temperature < 95;
 }
 
-bool CheckVitals::isPulseRateOutOfRange(double pulseRate) {
+bool isPulseRateOutOfRange(double pulseRate) {
     return pulseRate < 60 || pulseRate > 100;
 }
 
-bool CheckVitals::isSpo2OutOfRange(double spo2) {
+bool isSpo2OutOfRange(double spo2) {
     return spo2 < 90;
+}
+
+bool CheckVitals::checkVital(double value, bool (*checkFunc)(double), const std::string& message) {
+    if (checkFunc(value)) {
+        displayWarning(message);
+        return false; // Indicates a vital is not okay
+    }
+    return true; // Indicates the vital is okay
 }
 
 // Function to check if vitals are ok
 int CheckVitals::vitalsOk(double temperature, double pulseRate, double spo2) {
-    // Store condition functions and messages in pairs
-    struct Check {
-        bool (*func)(double);
-        const char* message;
-    };
+    bool tempCheck = checkVital(temperature, isTemperatureCritical, "Temperature is critical!");
+    bool pulseCheck = checkVital(pulseRate, isPulseRateOutOfRange, "Pulse Rate is out of range!");
+    bool spo2Check = checkVital(spo2, isSpo2OutOfRange, "Oxygen Saturation out of range!");
 
-    Check checks[] = {
-        { isTemperatureCritical, "Temperature is critical!" },
-        { isPulseRateOutOfRange, "Pulse Rate is out of range!" },
-        { isSpo2OutOfRange, "Oxygen Saturation out of range!" }
-    };
-
-    // Corresponding values for each check
-    double values[] = { temperature, pulseRate, spo2 };
-
-    // Iterate through each check
-    for (int i = 0; i < 3; ++i) {
-        if (checks[i].func(values[i])) {
-            displayWarning(checks[i].message);
-            return 0;  // Return 0 if any condition is met
-        }
-    }
-
-    return 1;  // Return 1 if all vitals are normal
+    // If all checks passed
+    return (tempCheck && pulseCheck && spo2Check) ? 1 : 0;
 }
-

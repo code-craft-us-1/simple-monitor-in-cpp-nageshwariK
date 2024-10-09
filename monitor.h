@@ -4,9 +4,7 @@
 
 class CheckVitals {
  public:
-    bool isTemperatureCritical(double temperature);
-    bool isPulseRateOutOfRange(double pulseRate);
-    bool isSpo2OutOfRange(double spo2);
     void displayWarning(const std::string& message);
     int vitalsOk(double temperature, double pulseRate, double spo2);
+    bool checkVital(double value, bool (*checkFunc)(double), const std::string& message);
 };
