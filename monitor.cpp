@@ -3,36 +3,36 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
-using std::cout, std::flush, std::this_thread::sleep_for, std::chrono::seconds;
 
-int vitalsOk(float temperature, float pulseRate, float spo2) {
-  if (temperature > 102 || temperature < 95) {
-    cout << "Temperature is critical!\n";
-    for (int i = 0; i < 6; i++) {
-      cout << "\r* " << flush;
-      sleep_for(seconds(1));
-      cout << "\r *" << flush;
-      sleep_for(seconds(1));
+std::string CheckVitals::checkVitals(double temperature, double pulseRate, double spo2) {
+    if (temperature > 102 || temperature < 95) {
+        return "Temperature is critical!";
     }
-    return 0;
-  } else if (pulseRate < 60 || pulseRate > 100) {
-    cout << "Pulse Rate is out of range!\n";
-    for (int i = 0; i < 6; i++) {
-      cout << "\r* " << flush;
-      sleep_for(seconds(1));
-      cout << "\r *" << flush;
-      sleep_for(seconds(1));
+    if (pulseRate < 60 || pulseRate > 100) {
+        return "Pulse Rate is out of range!";
     }
-    return 0;
-  } else if (spo2 < 90) {
-    cout << "Oxygen Saturation out of range!\n";
-    for (int i = 0; i < 6; i++) {
-      cout << "\r* " << flush;
-      sleep_for(seconds(1));
-      cout << "\r *" << flush;
-      sleep_for(seconds(1));
+    if (spo2 < 90) {
+        return "Oxygen Saturation out of range!";
     }
-    return 0;
-  }
-  return 1;
+    return ""; // No issues
 }
+
+void CheckVitals::displayWarning(const std::string& message) {
+    std::cout << message << "\n";
+    for (int i = 0; i < 6; i++) {
+        std::cout << "\r* " << std::flush;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "\r *" << std::flush;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+}
+
+int CheckVitals::vitalsOk(double temperature, double pulseRate, double spo2) {
+    std::string warningMessage = checkVitals(temperature, pulseRate, spo2);
+    if (!warningMessage.empty()) {
+        displayWarning(warningMessage);
+        return 0;
+    }
+    return 1;
+}
+
